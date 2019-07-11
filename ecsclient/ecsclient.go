@@ -219,7 +219,7 @@ func (c *EcsClient) RetrieveNodeInfo() {
 	parsedOutput := &dataNodes{}
 	// ECS gives you a way to get the node IPs, BUT it wont do it without a namespace
 	// Interestingly you can give it ANY namespace, including ones that dont exist
-	reqStatusURL := "http://" + c.ClusterAddress + ":9020/?endpoint"
+	reqStatusURL := "https://" + strings.Replace(c.ClusterAddress, "-mgt", "-data", -1) + ":9021/?endpoint"
 	log.Debug("node ip url is: " + reqStatusURL)
 
 	client := &http.Client{}
@@ -250,8 +250,8 @@ func (c *EcsClient) retrieveNodeState(node string, ch chan<- NodeState) {
 	parsedPing := &pingList{}
 	parsedOutput.NodeIP = node
 
-	log.Debug("this is the node I am querying ", node)
-	reqStatusURL := "http://" + node + ":9101/stats/dt/DTInitStat"
+	log.Debug("this is the node I am querying ", strings.Replace(node,"-mgt", "-data", -1))
+	reqStatusURL := "http://" + strings.Replace(node, "-mgt", "-data", -1) + ":9101/stats/dt/DTInitStat"
 	log.Debug("URL we are checking is ", reqStatusURL)
 
 	resp, err := http.Get(reqStatusURL)
@@ -269,7 +269,7 @@ func (c *EcsClient) retrieveNodeState(node string, ch chan<- NodeState) {
 	// ECS supplies the current number of active connections, but its per node
 	// and its part of the s3 retrieval api (ie port 9020) so lets get this and pass it along as well
 	// and its in yet another format ... or at least xml layed out differently, so more processing is needed
-	reqConnectionsURL := "http://" + node + ":9020/?ping"
+	reqConnectionsURL := strings.Replace(("https://" + node + ":9021/?ping"), "-mgt", "-data", -1)
 	log.Debug("URL we are checking for connections is ", reqConnectionsURL)
 
 	respConn, err := http.Get(reqConnectionsURL)
