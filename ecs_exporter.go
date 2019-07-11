@@ -281,7 +281,7 @@ func main() {
 		os.Exit(2)
 	}()
 
-	log.Info("Starting the ECS Exporter service...")
+	log.Info("VX FORK Starting the ECS Exporter service...")
 	log.Infof("commit: %s, build time: %s, release: %s",
 		version.Commit, version.BuildTime, version.Release,
 	)
