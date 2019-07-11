@@ -8,7 +8,7 @@ import (
 	"net"
 	"net/http"
 	"time"
-
+        "strings"
 	"github.com/prometheus/common/log"
 	"github.com/tidwall/gjson"
 )
